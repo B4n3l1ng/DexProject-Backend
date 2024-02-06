@@ -61,6 +61,8 @@ const pokemonSchema = new Schema({
     },
   ],
   thumbnail: { type: String, required: true },
+  dexEntry: { Type: String, required: true },
+  generation: { Type: String, required: true, enum: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'] },
 });
 
 const Pokemon = model('Pokemon', pokemonSchema);
