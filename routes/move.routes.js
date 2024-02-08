@@ -97,4 +97,31 @@ router.get('/:moveId', async (req, res) => {
   }
 });
 
+router.put('/:moveId', isAuthenticated, checkAdmin, async (req, res) => {
+  const { moveId } = req.params;
+  if (!ObjectId.isValid(moveId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  const { name, description, typing, type } = req.body;
+  if (name === '' || description === '' || typing === '' || type === '') {
+    res.status(406).json('Name, Description, Typing and Type are required');
+    return;
+  }
+  const payload = { name, description, typing, type };
+  if (req.body.power) {
+    payload.power = parseInt(req.body.power);
+  }
+  if (req.body.accuracy) {
+    payload.accuracy = parseInt(req.body.accuracy);
+  }
+  try {
+    const updated = await Move.findByIdAndUpdate(moveId, payload, { new: true });
+    res.status(202).json(updated);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
