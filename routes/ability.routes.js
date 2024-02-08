@@ -88,4 +88,19 @@ router.put('/:abilityId', isAuthenticated, checkAdmin, async (req, res) => {
   }
 });
 
+router.delete('/:abilityId', isAuthenticated, checkAdmin, async (req, res) => {
+  const { abilityId } = req.params;
+  if (!ObjectId.isValid(abilityId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  try {
+    const deleted = await Ability.findByIdAndDelete(abilityId);
+    res.status(202).json('Ability deleted successfully.');
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
