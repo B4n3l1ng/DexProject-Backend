@@ -146,4 +146,19 @@ router.post('/', isAuthenticated, checkAdmin, async (req, res) => {
   }
 });
 
+router.delete('/:moveId', isAuthenticated, checkAdmin, async (req, res) => {
+  const { moveId } = req.params;
+  if (!ObjectId.isValid(moveId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  try {
+    const deleted = await Move.findByIdAndDelete(moveId);
+    res.status(202).json('Move deleted successfully.');
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
