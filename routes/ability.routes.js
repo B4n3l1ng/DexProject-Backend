@@ -53,12 +53,7 @@ router.get('/:abilityId', async (req, res) => {
   }
 });
 
-router.post('/:abilityId', async (req, res) => {
-  const { abilityId } = req.params;
-  if (!ObjectId.isValid(abilityId)) {
-    res.status(400).json('Not a valid Id');
-    return;
-  }
+router.post('/', async (req, res) => {
   const { name, description } = req.body;
   if (name === '' || description === '') {
     res.status(406).json('Name and Description are required');
@@ -69,6 +64,7 @@ router.post('/:abilityId', async (req, res) => {
     res.status(201).json(newAbility);
   } catch (error) {
     console.log(error);
+    res.status(500).json(error);
   }
 });
 
