@@ -53,7 +53,7 @@ router.get('/:abilityId', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', isAuthenticated, checkAdmin, async (req, res) => {
   const { name, description } = req.body;
   if (name === '' || description === '') {
     res.status(406).json('Name and Description are required');
@@ -62,6 +62,26 @@ router.post('/', async (req, res) => {
   try {
     const newAbility = await Ability.create({ name, description });
     res.status(201).json(newAbility);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+router.put('/:abilityId', isAuthenticated, checkAdmin, async (req, res) => {
+  const { name, description } = req.body;
+  if (name === '' || description === '') {
+    res.status(406).json('Name and Description are required.');
+    return;
+  }
+  const { abilityId } = req.params;
+  if (!ObjectId.isValid(abilityId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  try {
+    const updated = await Ability.findByIdAndUpdate(abilityId, { name, description }, { new: true });
+    res.status(200).json(updated);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
