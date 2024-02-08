@@ -54,15 +54,22 @@ const pokemonSchema = new Schema({
     },
   ],
   hiddenAbility: { type: Schema.Types.ObjectId, ref: 'Ability' },
-  moves: [
+  levelUpMoves: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Move',
+      move: {
+        type: Schema.Types.ObjectId,
+        ref: 'Move',
+      },
+      level: { type: Number, min: 0, max: 100 },
     },
   ],
+  machineMoves: [{ type: Schema.Types.ObjectId, ref: 'Move' }],
+  tutorMoves: [{ type: Schema.Types.ObjectId, ref: 'Move' }],
+  eggMoves: [{ type: Schema.Types.ObjectId, ref: 'Move' }],
   thumbnail: { type: String, required: true },
-  dexEntry: { Type: String, required: true },
-  generation: { Type: String, required: true, enum: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'] },
+  shinyThumbnail: { type: String },
+  dexEntry: { type: String, required: true },
+  generation: { type: String, required: true, enum: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'] },
 });
 
 const Pokemon = model('Pokemon', pokemonSchema);

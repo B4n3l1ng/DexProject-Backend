@@ -1,28 +1,20 @@
-const { expressjwt: jwt } = require("express-jwt");
+const jwt = require('jsonwebtoken');
 
-// Instantiate the JWT token validation middleware
-const isAuthenticated = jwt({
-  secret: process.env.TOKEN_SECRET,
-  algorithms: ["HS256"],
-  requestProperty: "payload",
-  getToken: getTokenFromHeaders,
-});
-// Function used to extract the JWT token from the request's 'Authorization' Headers
-function getTokenFromHeaders(req) {
-  // Check if the token is available on the request Headers
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.split(" ")[0] === "Bearer"
-  ) {
-    // Get the encoded token string and return it
-    const token = req.headers.authorization.split(" ")[1];
-    return token;
+const isAuthenticated = (req, res, next) => {
+  try {
+    // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cMErWtEf7DxCXJl8C9q0L7ttkm-Ex54UWHsOCMGbtUc"
+    if (req.headers.authorization?.split(' ')[0] === 'Bearer') {
+      const token = req.headers.authorization.split(' ')[1];
+      const payload = jwt.verify(token, process.env.TOKEN_SECRET);
+
+      req.tokenPayload = payload; // { userId }
+      next();
+    } else {
+      throw new Error('No token');
+    }
+  } catch (error) {
+    res.status(401).json('Token is not provided or not valid');
   }
-
-  return null;
-}
-
-// Export the middleware so that we can use it to create protected routes
-module.exports = {
-  isAuthenticated,
 };
+
+module.exports = { isAuthenticated };
