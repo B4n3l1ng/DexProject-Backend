@@ -172,4 +172,7 @@ router.get('/', (req, res, next) => {
 const itemRoutes = require('./item.routes');
 router.use('/items', itemRoutes);
 
+const abilityRoutes = require('./ability.routes');
+router.use('/abilities', abilityRoutes);
+
 module.exports = router;
