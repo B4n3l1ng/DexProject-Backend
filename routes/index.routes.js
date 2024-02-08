@@ -175,4 +175,7 @@ router.use('/items', itemRoutes);
 const abilityRoutes = require('./ability.routes');
 router.use('/abilities', abilityRoutes);
 
+const moveRoutes = require('./move.routes');
+router.use('/moves', moveRoutes);
+
 module.exports = router;

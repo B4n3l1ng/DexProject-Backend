@@ -61,3 +61,21 @@
  *           description: The accuracy of the move.
  *           example: 100
  */
+
+const router = require('express').Router();
+const { isAuthenticated } = require('../middleware/jwt.middleware');
+const { checkAdmin } = require('../middleware/admin.middleware');
+const Move = require('../models/Moves.model');
+const ObjectId = require('mongoose').Types.ObjectId;
+
+router.get('/', async (req, res) => {
+  try {
+    const allMoves = await Move.find();
+    res.status(200).json(allMoves);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+module.exports = router;
