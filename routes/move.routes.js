@@ -124,4 +124,26 @@ router.put('/:moveId', isAuthenticated, checkAdmin, async (req, res) => {
   }
 });
 
+router.post('/', isAuthenticated, checkAdmin, async (req, res) => {
+  const { name, description, typing, type } = req.body;
+  if (name === '' || description === '' || typing === '' || type === '') {
+    res.status(406).json('Name, Description, Typing and Type are required');
+    return;
+  }
+  const payload = { name, description, typing, type };
+  if (req.body.power) {
+    payload.power = parseInt(req.body.power);
+  }
+  if (req.body.accuracy) {
+    payload.accuracy = parseInt(req.body.accuracy);
+  }
+  try {
+    const newMove = await Move.create(payload);
+    res.status(201).json(newMove);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
