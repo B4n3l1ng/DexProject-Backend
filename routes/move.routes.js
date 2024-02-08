@@ -78,4 +78,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:moveId', async (req, res) => {
+  const { moveId } = req.params;
+  if (!ObjectId.isValid(moveId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  try {
+    const oneMove = await Move.findById(moveId);
+    if (oneMove) {
+      res.status(200).json(oneMove);
+    } else {
+      res.status(404).json('No move found with that id.');
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(oneMove);
+  }
+});
+
 module.exports = router;
