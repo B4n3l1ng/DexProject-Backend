@@ -34,4 +34,42 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:abilityId', async (req, res) => {
+  const { abilityId } = req.params;
+  if (!ObjectId.isValid(abilityId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  try {
+    const oneAbility = await Ability.findById(abilityId);
+    if (oneAbility) {
+      res.status(200).json(oneAbility);
+    } else {
+      res.status(404).json('No ability with that id found.');
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+router.post('/:abilityId', async (req, res) => {
+  const { abilityId } = req.params;
+  if (!ObjectId.isValid(abilityId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  const { name, description } = req.body;
+  if (name === '' || description === '') {
+    res.status(406).json('Name and Description are required');
+    return;
+  }
+  try {
+    const newAbility = await Ability.create({ name, description });
+    res.status(201).json(newAbility);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;
