@@ -118,3 +118,33 @@
  *           description: The generation of the Pokémon.
  *           example: IV
  */
+
+const router = require('express').Router();
+const Pokemon = require('../models/Pokemons.model');
+
+const ObjectId = require('mongoose').Types.ObjectId;
+
+router.get('/', async (req, res) => {
+  try {
+    const allPokemon = await Pokemon.find().populate('abilities hiddenAbility levelUpMoves machineMoves tutorMoves eggMoves');
+    res.status(200).json(allPokemon);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get('/:pokemonId', async (req, res) => {
+  const { pokemonId } = req.params;
+  try {
+    if (!ObjectId.isValid(pokemonId)) {
+      res.status(400).json('Not a valid Id');
+      return;
+    }
+    const pokemon = await Pokemon.findById(pokemonId);
+    res.status(200).json(pokemon);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+module.exports = router;

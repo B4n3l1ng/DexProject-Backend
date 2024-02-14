@@ -178,4 +178,7 @@ router.use('/abilities', abilityRoutes);
 const moveRoutes = require('./move.routes');
 router.use('/moves', moveRoutes);
 
+const pokemonRoutes = require('./pokemon.routes');
+router.use('/pokemon', pokemonRoutes);
+
 module.exports = router;
