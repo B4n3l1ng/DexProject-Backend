@@ -141,7 +141,17 @@ router.get('/:pokemonId', async (req, res) => {
       return;
     }
     const pokemon = await Pokemon.findById(pokemonId);
-    res.status(200).json(pokemon);
+    const { dexNumber } = pokemon;
+    const previous = await Pokemon.find({ dexNumber: dexNumber - 1 });
+    const next = await Pokemon.find({ dexNumber: dexNumber + 1 });
+    const response = { pokemon };
+    if (previous) {
+      response.previous = previous._id;
+    }
+    if (next) {
+      response.next = next._id;
+    }
+    res.status(200).json({ pokemon, previous: previous._id, next: next._id });
   } catch (error) {
     res.status(500).json(error);
   }
