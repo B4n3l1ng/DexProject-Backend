@@ -140,10 +140,10 @@ router.get('/:pokemonId', async (req, res) => {
       res.status(400).json('Not a valid Id');
       return;
     }
-    const pokemon = await Pokemon.findById(pokemonId);
+    const pokemon = await Pokemon.findById(pokemonId).populate('abilities hiddenAbility levelUpMoves machineMoves tutorMoves eggMoves');
     const { dexNumber } = pokemon;
-    const previous = await Pokemon.find({ dexNumber: dexNumber - 1 });
-    const next = await Pokemon.find({ dexNumber: dexNumber + 1 });
+    const previous = await Pokemon.findOne({ dexNumber: dexNumber - 1 });
+    const next = await Pokemon.findOne({ dexNumber: dexNumber + 1 });
     const response = { pokemon };
     if (previous) {
       response.previous = previous._id;
