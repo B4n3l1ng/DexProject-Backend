@@ -144,15 +144,17 @@ router.get('/:pokemonId', async (req, res) => {
     const { dexNumber } = pokemon;
     const previous = await Pokemon.findOne({ dexNumber: dexNumber - 1 });
     const next = await Pokemon.findOne({ dexNumber: dexNumber + 1 });
+    console.log(previous);
     const response = { pokemon };
-    if (previous) {
+    if (previous !== null) {
       response.previous = previous._id;
     }
-    if (next) {
+    if (next !== null) {
       response.next = next._id;
     }
-    res.status(200).json({ pokemon, previous: previous._id, next: next._id });
+    res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 });
