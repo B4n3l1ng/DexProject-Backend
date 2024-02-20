@@ -56,7 +56,7 @@ const pokemonSchema = new Schema({
   hiddenAbility: { type: Schema.Types.ObjectId, ref: 'Ability' },
   levelUpMoves: [
     {
-      move: {
+      _id: {
         type: Schema.Types.ObjectId,
         ref: 'Move',
       },
