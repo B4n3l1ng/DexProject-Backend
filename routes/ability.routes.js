@@ -22,6 +22,7 @@ const router = require('express').Router();
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 const { checkAdmin } = require('../middleware/admin.middleware');
 const Ability = require('../models/Abilities.model');
+const Pokemon = require('../models/Pokemons.model');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 router.get('/', async (req, res) => {
@@ -31,6 +32,24 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
+  }
+});
+
+router.get('/:abilityId/pokemon', async (req, res) => {
+  const { abilityId } = req.params;
+  if (!ObjectId.isValid(abilityId)) {
+    res.status(400).json('Not a valid Id');
+    return;
+  }
+  try {
+    const hiddenAbility = await Pokemon.find({ hiddenAbility: abilityId });
+
+    const normalAbility = await Pokemon.find({ abilities: abilityId });
+
+    const all = hiddenAbility.concat(normalAbility).sort((a, b) => a.dexNumber - b.dexNumber);
+    res.status(200).json(all);
+  } catch (error) {
+    console.log(error);
   }
 });
 
