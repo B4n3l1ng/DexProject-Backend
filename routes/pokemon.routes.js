@@ -133,6 +133,46 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/type', async (req, res) => {
+  const { t } = req.query;
+  const typeArray = [
+    'normal',
+    'fire',
+    'water',
+    'grass',
+    'flying',
+    'fighting',
+    'poison',
+    'electric',
+    'ground',
+    'rock',
+    'psychic',
+    'ice',
+    'bug',
+    'ghost',
+    'steel',
+    'dragon',
+    'dark',
+    'fairy',
+  ];
+  if (!t || !typeArray.includes(t.toLowerCase())) {
+    res.status(400).json({ message: 'Query malformed' });
+    return;
+  }
+
+  try {
+    const typePokemon = await Pokemon.find({ type: t.toLowerCase() });
+    if (typePokemon.length > 0) {
+      res.status(200).json(typePokemon);
+    } else {
+      res.status(404).json({ message: 'No pokemon with that type!' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
 router.get('/:pokemonId', async (req, res) => {
   const { pokemonId } = req.params;
   try {
