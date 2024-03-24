@@ -126,7 +126,9 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 router.get('/', async (req, res) => {
   try {
-    const allPokemon = await Pokemon.find().populate('abilities hiddenAbility levelUpMoves machineMoves tutorMoves eggMoves');
+    const allPokemon = await Pokemon.find()
+      .populate('abilities hiddenAbility machineMoves tutorMoves eggMoves')
+      .populate({ path: 'levelUpMoves', populate: { path: '_id' } });
     res.status(200).json(allPokemon);
   } catch (error) {
     res.status(500).json(error);
